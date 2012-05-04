@@ -54,7 +54,7 @@ switch ($_GET['action']) {
 		//$tree->set_start($_POST['number']);
 		$tree->go();
 		echo $tree->nice_steps("&rarr;");
-		//$tree->test(14);
+		//echo $tree->get_prev(11, 1222);
 	}
 	break;
 	case 'patch':

@@ -4,7 +4,8 @@ class tree {
 	var $prev;
 	var $table;
 	var $steps;
-	var $start;
+	var $is_visit;
+	var $right;
 	function tree($tbl) {
 		$this->table = $tbl;	
 	}
@@ -31,10 +32,11 @@ class tree {
 		} else return -1;
 	}
 	function get_prev($id, $previos) {
-		$query = "SELECT `id` FROM `{$this->table}` WHERE `chto` = (SELECT `kuda` FROM `{$this->table}` WHERE `id` = '$id' LIMIT 1) AND `chto` = '{$previos}' LIMIT 1"; #5
+		$query = "SELECT `id` FROM `{$this->table}` WHERE `chto` = (SELECT `kuda` FROM `{$this->table}` WHERE `id` = '$id' LIMIT 1) AND `chto` = '{$previos}'"; #5
 		$result = mysql_query($query) or die("#5: Невозможно выполнить SELECT:".mysql_error());
-		if(mysql_num_rows($result) == 1) {
-			$row = mysql_fetch_array($result);
+		if(mysql_num_rows($result) != 0) {
+			while($row = mysql_fetch_array($result))
+				if($this->is_visit[$row['id']])	break;
 			return $row['id'];
 		} else return -1;
 	}
@@ -50,31 +52,40 @@ class tree {
 		if(mysql_num_rows($result) == 1) {
 			$row = mysql_fetch_array($result);
 			$this->prev[$this->current] = $row['kuda'];
+			$this->is_visit[$this->current] = true;
 			$this->steps .= $this->current."|";
+			if ($this->find_rlink($row['kuda'], $this->current) != -1) $this->right[$this->current] = true;
 			if ($this->find_llink($row['chto']) != -1) {
 				$this->set_current($this->find_llink($row['chto']));
 				$arr = $this->select_current($this->current);
 				$this->prev[$this->current] = $arr['kuda'];
+				$this->is_visit[$this->current] = true;
 				$this->go();
 			} else if ($this->find_rlink($row['kuda'], $this->current) != -1) {
 				$this->set_current($this->find_rlink($row['kuda'], $this->current));
 				$arr = $this->select_current($this->current);
 				$this->prev[$this->current] = $arr['kuda'];
+				$this->is_visit[$this->current] = true;
 				$this->go();
 			} else if ($this->find_rlink($row['kuda'], $this->current) == -1 && $this->find_llink($row['chto']) == -1) {
 				while($this->get_prev($this->current, $this->prev[$this->current]) > 0) {
+					$arr2 = $this->select_current($this->current);
+					$this->prev[$this->current] = $arr2['kuda'];
 					$this->current = $this->get_prev($this->current, $this->prev[$this->current]);
+					//if ($this->find_rlink($arr2['kuda'], 15) != -1 && $this->right[15] == true) $this->go();
+					
 					$this->steps .= $this->current."|";
 				}
+				$this->is_visit = array_fill(0, count($this->is_visit), false);
 			}
 		}
-		/*
+		
 		$arr = $this->select_current($this->current);
 		if ($this->find_rlink($arr['kuda'], $this->current) != -1) {
 			$this->set_current($this->find_rlink($arr['kuda'], $this->current));
 			$this->go();
 		}	
-		*/
+		
 	}
 	function test($cur) {
 		$arr = $this->select_current($cur);
