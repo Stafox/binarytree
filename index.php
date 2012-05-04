@@ -2,24 +2,26 @@
 include("config.php");
 include("mysql.class.php");
 include("tree.class.php");
+header("Content-Type: text/html; charset=utf-8");	
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-<title>Бинарное дерево</title>
+<title>Р‘РёРЅР°СЂРЅРѕРµ РґРµСЂРµРІРѕ</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
 <body>
 <div style="width:800px;">
 <div style="float:left;width:300px;word-wrap:break-word;">
 <form method="post" action="<?php $_SERVER['PHP_SELF']; ?>?action=go">
-<input type="text" name="number" /><input type="submit" name="go" value="Обход" />
+<input type="text" name="number" /><input type="submit" name="go" value="РћР±С…РѕРґ" />
 </form>
 <br/>
 <form method="post" action="<?php $_SERVER['PHP_SELF']; ?>?action=clear">
-<input type="submit" name="clear" value="Очистить линки" />
+<input type="submit" name="clear" value="РћС‡РёСЃС‚РёС‚СЊ Р»РёРЅРєРё" />
 </form>
 <form method="post" action="<?php $_SERVER['PHP_SELF']; ?>?action=search">
-<input type="submit" name="search" value="Найти линки" />
+<input type="submit" name="search" value="РќР°Р№С‚Рё Р»РёРЅРєРё" />
 </form>
 <?php
 $mysql = new mysql($db_host, "", $db_base, $db_user, $db_pass);
@@ -87,7 +89,7 @@ $mysql->disconnect();
 ?>
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>?action=patch" method="post">
 <input type="hidden" name="steps" value="<?php echo $tree->steps; ?>" />
-<input type="submit" name="patch" <?php if (!isset($_POST['go'])) echo 'disabled="disabled"'; ?> value="Прошивка" />
+<input type="submit" name="patch" <?php if (!isset($_POST['go'])) echo 'disabled="disabled"'; ?> value="РџСЂРѕС€РёРІРєР°" />
 </form>
 </div>
 <div style="float:right;background:url(img/1.png) no-repeat;width:500px;height:500px;position:fixed;left:300px;">

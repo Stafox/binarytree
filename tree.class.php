@@ -65,16 +65,21 @@ class tree {
 				$this->set_current($this->find_rlink($row['kuda'], $this->current));
 				$arr = $this->select_current($this->current);
 				$this->prev[$this->current] = $arr['kuda'];
-				$this->is_visit[$this->current] = true;
+				//$this->is_visit[$this->current] = true;
 				$this->go();
 			} else if ($this->find_rlink($row['kuda'], $this->current) == -1 && $this->find_llink($row['chto']) == -1) {
 				while($this->get_prev($this->current, $this->prev[$this->current]) > 0) {
 					$arr2 = $this->select_current($this->current);
 					$this->prev[$this->current] = $arr2['kuda'];
-					$this->current = $this->get_prev($this->current, $this->prev[$this->current]);
-					//if ($this->find_rlink($arr2['kuda'], 15) != -1 && $this->right[15] == true) $this->go();
 					
-					$this->steps .= $this->current."|";
+					//$this->steps .= '(у '.$this->current.' есть справа '.$this->right[$this->current].')'."( справа заходили: ".$this->is_visit[$this->find_rlink($arr2['kuda'], $this->current)].")";
+					
+					if ($this->find_rlink($arr2['kuda'], $this->current) != -1 && $this->right[$this->current] && $this->is_visit[$this->find_rlink($arr2['kuda'], $this->current)] == false) {
+						$this->set_current($this->find_rlink($arr2['kuda'], $this->current));
+						$this->go();
+					}
+					$this->current = $this->get_prev($this->current, $this->prev[$this->current]);
+					if($this->current > 0)$this->steps .= $this->current."|";
 				}
 				$this->is_visit = array_fill(0, count($this->is_visit), false);
 			}
