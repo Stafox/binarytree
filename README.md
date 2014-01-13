@@ -1,4 +1,4 @@
-binarytree
+PHP BinaryTree
 ==========
 
-Binary tree algorythm on PHP.
+Binary tree algorithm on PHP.
